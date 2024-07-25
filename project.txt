@@ -1,0 +1,132 @@
+class TreeNode {
+    int val;
+    TreeNode left, right;
+
+    public TreeNode(int item) {
+        val = item;
+        left = right = null;
+    }
+}
+
+class BinarySearchTree {
+    TreeNode root;
+
+    BinarySearchTree() {
+        root = null;
+    }
+
+    // Insert a key into the BST
+    void insert(int key) {
+        root = insertRec(root, key);
+    }
+
+    // A recursive function to insert a new key in BST
+    TreeNode insertRec(TreeNode root, int key) {
+        if (root == null) {
+            root = new TreeNode(key);
+            return root;
+        }
+        if (key < root.val)
+            root.left = insertRec(root.left, key);
+        else if (key > root.val)
+            root.right = insertRec(root.right, key);
+        return root;
+    }
+
+    // Search a key in the BST
+    boolean search(int key) {
+        return searchRec(root, key);
+    }
+
+    // A recursive function to search a key in BST
+    boolean searchRec(TreeNode root, int key) {
+        if (root == null)
+            return false;
+        if (root.val == key)
+            return true;
+        return key < root.val ? searchRec(root.left, key) : searchRec(root.right, key);
+    }
+
+    // Delete a key from the BST
+    void delete(int key) {
+        root = deleteRec(root, key);
+    }
+
+    // A recursive function to delete a key in BST
+    TreeNode deleteRec(TreeNode root, int key) {
+        if (root == null)
+            return root;
+
+        if (key < root.val)
+            root.left = deleteRec(root.left, key);
+        else if (key > root.val)
+            root.right = deleteRec(root.right, key);
+        else {
+            if (root.left == null)
+                return root.right;
+            else if (root.right == null)
+                return root.left;
+
+            root.val = minValue(root.right);
+            root.right = deleteRec(root.right, root.val);
+        }
+
+        return root;
+    }
+
+    int minValue(TreeNode root) {
+        int minValue = root.val;
+        while (root.left != null) {
+            minValue = root.left.val;
+            root = root.left;
+        }
+        return minValue;
+    }
+
+    // Inorder traversal of the BST
+    void inorder() {
+        inorderRec(root);
+    }
+
+    // A utility function to do inorder traversal of BST
+    void inorderRec(TreeNode root) {
+        if (root != null) {
+            inorderRec(root.left);
+            System.out.print(root.val + " ");
+            inorderRec(root.right);
+        }
+    }
+
+    public static void main(String[] args) {
+        BinarySearchTree tree = new BinarySearchTree();
+
+        tree.insert(50);
+        tree.insert(30);
+        tree.insert(20);
+        tree.insert(40);
+        tree.insert(70);
+        tree.insert(60);
+        tree.insert(80);
+
+        System.out.println("Inorder traversal of the given tree");
+        tree.inorder();
+
+        System.out.println("\n\nDelete 20");
+        tree.delete(20);
+        System.out.println("Inorder traversal of the modified tree");
+        tree.inorder();
+
+        System.out.println("\n\nDelete 30");
+        tree.delete(30);
+        System.out.println("Inorder traversal of the modified tree");
+        tree.inorder();
+
+        System.out.println("\n\nDelete 50");
+        tree.delete(50);
+        System.out.println("Inorder traversal of the modified tree");
+        tree.inorder();
+
+        System.out.println("\n\nSearch for 60: " + tree.search(60));
+        System.out.println("Search for 25: " + tree.search(25));
+    }
+}
